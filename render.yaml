@@ -36,3 +36,12 @@ services:
         value: true
       - key: WEB_CONCURRENCY
         value: 2 # sensible default
+
+        services:
+  - type: web
+    name: hostedgpt
+    env: ruby
+    buildCommand: bundle install
+    startCommand: bundle exec rails server -p $PORT
+    postDeployCommand: bundle exec rails db:migrate
+
