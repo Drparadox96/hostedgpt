@@ -51,7 +51,7 @@ shared:
     app_url_protocol: <%= ENV["APP_URL_PROTOCOL"] || default_to(app_url: :protocol) %>
     app_url_host: <%= ENV["APP_URL_HOST"] || default_to(app_url: :host) %>
     app_url_port: <%= ENV["APP_URL_PORT"] || default_to(app_url: :port) %>
-    product_name: <%= ENV["PRODUCT_NAME"] || "HostedGPT" %>
+    product_name: <%= ENV["PRODUCT_NAME"] || "nkomode All in one AI" %>
     default_openai_key: <%= ENV["DEFAULT_OPENAI_KEY"] %>
     default_anthropic_key: <%= ENV["DEFAULT_ANTHROPIC_KEY"] %>
     default_groq_key: <%= ENV["DEFAULT_GROQ_KEY"] %>
