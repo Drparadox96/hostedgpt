@@ -3,12 +3,14 @@ class APIService < ApplicationRecord
   URL_ANTHROPIC = "https://api.anthropic.com/"
   URL_GROQ = "https://api.groq.com/openai/v1/"
   URL_GEMINI = "https://generativelanguage.googleapis.com/v1beta/"
+  URL_OPENROUTER = "https://openrouter.ai/api/v1/"
+
 
   belongs_to :user
 
   has_many :language_models, -> { not_deleted }
 
-  enum :driver, %w[openai anthropic gemini].index_by(&:to_sym)
+  enum :driver, %w[openai anthropic gemini openrouter groq].index_by(&:to_sym)
 
   validates :url, format: URI::DEFAULT_PARSER.make_regexp(%w[http https]), if: -> { url.present? }
   validates :name, :url, presence: true
@@ -21,18 +23,23 @@ class APIService < ApplicationRecord
   scope :ordered, -> { order(:name) }
 
   def ai_backend
-    case driver
-    when "openai"
-      AIBackend::OpenAI
-    when "anthropic"
-      AIBackend::Anthropic
-    when "gemini"
-      AIBackend::Gemini
-    end
+  case driver
+  when "openai"
+    AIBackend::OpenAI
+  when "anthropic"
+    AIBackend::Anthropic
+  when "gemini"
+    AIBackend::Gemini
+  when "openrouter"
+    AIBackend::OpenAI # OpenRouter is OpenAI-compatible
+  when "groq"
+    AIBackend::OpenAI # Groq is also OpenAI-compatible
   end
+end
+
 
   def requires_token?
-    [URL_OPEN_AI, URL_ANTHROPIC, URL_GEMINI].include?(url) # other services may require it but we don't always know
+    [URL_OPEN_AI, URL_ANTHROPIC, URL_OPENROUTER, URL_GEMINI].include?(url) # other services may require it but we don't always know
   end
 
   def effective_token
@@ -50,6 +57,7 @@ class APIService < ApplicationRecord
     return Setting.default_openai_key if url == URL_OPEN_AI
     return Setting.default_anthropic_key if url == URL_ANTHROPIC
     return Setting.default_groq_key if url == URL_GROQ
+    return Setting.default_openrouter_key if url == URL_OPENROUTER
   end
 
   def soft_delete_language_models
