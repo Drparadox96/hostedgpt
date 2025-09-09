@@ -88,25 +88,35 @@
     <%= render "layouts/alerts" %>
 <script src="https://www.w3counter.com/tracker.js?id=155054"></script>
 <script>
-      let deferredPrompt;
+  let deferredPrompt;
 
-      // Handle beforeinstallprompt (Android/Chrome)
-      window.addEventListener("beforeinstallprompt", (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-        document.getElementById("install-app-menu").classList.remove("hidden");
+  // Handle beforeinstallprompt (Android/Chrome/Desktop)
+  window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    document.getElementById("install-app-menu").classList.remove("hidden");
+  });
+
+  // Force menu visible on iOS (no beforeinstallprompt support)
+  document.addEventListener("DOMContentLoaded", () => {
+    if (/iPhone|iPad|iPod/.test(navigator.userAgent)) {
+      document.getElementById("install-app-menu").classList.remove("hidden");
+    }
+  });
+
+  function showInstallInstructions() {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.finally(() => {
+        deferredPrompt = null;
       });
+    } else if (/iPhone|iPad|iPod/.test(navigator.userAgent)) {
+      alert("📲 On iOS: Tap the Share button → 'Add to Home Screen'");
+    } else {
+      alert("💻 On desktop: Look for the Install icon in your browser’s address bar.");
+    }
+  }
+</script>
 
-      function showInstallInstructions() {
-        if (deferredPrompt) {
-          deferredPrompt.prompt();
-          deferredPrompt.userChoice.finally(() => deferredPrompt = null);
-        } else if (/iPhone|iPad|iPod/.test(navigator.userAgent)) {
-          alert("📲 On iOS: Tap Share → Add to Home Screen");
-        } else {
-          alert("💻 On desktop: Click the Install icon in your browser bar.");
-        }
-      }
-    </script>
   </body>
 </html>
