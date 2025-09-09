@@ -56,6 +56,13 @@
                     Settings
                   <% end %>
                 </li>
+                <li>
+  <%= link_to "https://t.me/nkomodegpt", target: "_blank", rel: "noopener" do %>
+    <%= icon "chat-bubble-left-right", variant: :outline, size: 18 %>
+    Need Help? Join Support Group
+  <% end %>
+</li>
+
                 <li><%= link_to logout_path, data: { turbo: false } do %><%= icon "arrow-right-start-on-rectangle", variant: :outline, size: 18 %>Logout<% end %></li>
               </menu>
             </div>
