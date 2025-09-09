@@ -1,17 +1,19 @@
-# Puma configuration optimized for low-memory Render free instance
+# Puma configuration for Render Standard instance
 
-# Reduce threads to save memory
-threads_count = ENV.fetch("RAILS_MAX_THREADS") { 1 }  # 1 thread is enough
+# Use up to 5 threads (low memory but allows some concurrency)
+threads_count = ENV.fetch("RAILS_MAX_THREADS") { 5 }
 threads threads_count, threads_count
 
-# No workers to avoid forking memory-heavy processes
-workers 0
+# Workers: use 2 to leverage multiple cores
+# (each worker forks the app into its own process)
+workers ENV.fetch("WEB_CONCURRENCY") { 2 }
 
-# Worker timeout for development
-worker_timeout 3600 if ENV.fetch("RAILS_ENV", "development") == "development"
+# Worker timeout (120s = safe for GPT API calls, but not infinite)
+worker_timeout 120
 
-# Port
-port ENV.fetch("PORT", 3000)
+# Bind to Render's required host/port
+port ENV.fetch("PORT") { 10000 }
+bind "tcp://0.0.0.0:#{ENV.fetch("PORT") { 10000 }}"
 
 # Allow restart via bin/rails restart
 plugin :tmp_restart
