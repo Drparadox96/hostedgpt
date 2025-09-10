@@ -3,15 +3,12 @@
 <html data-role="<%= Rails.env %>">
   <%= render "head" %>
   <body
-    class="
-      nav-closed
-      <%= Current.user.preferences[:dark_mode] %>
-      bg-white dark:bg-gray-800
-    "
-    data-controller="transition focus-restore"
-    data-transition-toggle-class="nav-closed"
-    data-transition-target="transitionable"
-  >
+  class="nav-closed dark bg-gray-800 text-gray-100"
+  data-controller="transition focus-restore"
+  data-transition-toggle-class="nav-closed"
+  data-transition-target="transitionable"
+>
+
 
 
     <nav
