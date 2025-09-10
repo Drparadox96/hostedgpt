@@ -130,5 +130,18 @@
      (adsbygoogle = window.adsbygoogle || []).push({});
 </script>
 </template>
+<script>
+  function loadAds() {
+    document.querySelectorAll('[data-adsense-container]').forEach((el) => {
+      if (!el.hasChildNodes()) {
+        const ad = document.getElementById('adsense-template').content.cloneNode(true);
+        el.appendChild(ad);
+        (adsbygoogle = window.adsbygoogle || []).push({});
+      }
+    });
+  }
+  document.addEventListener("turbo:load", loadAds);
+  document.addEventListener("turbo:render", loadAds);
+</script>
   </body>
 </html>
